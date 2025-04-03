@@ -11,4 +11,5 @@ uv self update
 ```
 uv python install 3.11.11
 uv venv --python 3.11.11
+uv sync
 ```
