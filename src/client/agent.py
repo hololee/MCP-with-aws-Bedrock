@@ -18,7 +18,7 @@ class CSVAgent:
         # 대화 기록
         self.messages = []
 
-    def invoke(self, message):
+    async def invoke(self, message):
 
         content = [{'text': message}]
 
