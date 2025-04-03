@@ -26,7 +26,32 @@ async def main():
                     'original_name': tool.name,
                 }
 
-            print(await csv_agent.invoke("아리조나 날씨를 알려줘."))
+            response = await csv_agent.invoke([{'text': "뉴욕 날씨를 알려줘."}])
+
+            if response['stopReason'] == 'tool_use':
+                tool_response = []
+                for content_item in response['output']['message']['content']:
+                    if 'toolUse' in content_item:
+                        tool_use_id = content_item['toolUse']['toolUseId']
+                        name = content_item['toolUse']['name']
+                        tool_input = content_item['toolUse']['input']
+                        tool_func = csv_agent.tools[name]['function']
+                        original_name = csv_agent.tools[name]['original_name']
+
+                        result = await tool_func(original_name, tool_input)
+                        tool_response.append(
+                            {
+                                'toolResult': {
+                                    'toolUseId': tool_use_id,
+                                    'content': [{'text': str(result)}],
+                                    'status': 'success',
+                                }
+                            }
+                        )
+                response = await csv_agent.invoke(tool_response)
+                print(response)
+            else:
+                print(response)
 
 
 if __name__ == "__main__":

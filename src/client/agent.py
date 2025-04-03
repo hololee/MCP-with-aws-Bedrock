@@ -6,7 +6,7 @@ class CSVAgent:
         self,
         region="ap-northeast-2",
         modelId="anthropic.claude-3-5-sonnet-20240620-v1:0",
-        system_prompt="You are a helpful assistant that can answer questions and help with tasks.",
+        system_prompt="You are a helpful assistant that can answer questions and help with tools.",
     ):
         self.region = region
         self.modelId = modelId
@@ -21,9 +21,7 @@ class CSVAgent:
         # 도구 모음
         self.tools = {}
 
-    async def invoke(self, message):
-
-        content = [{'text': message}]
+    async def invoke(self, content):
 
         self.messages.append(
             {
