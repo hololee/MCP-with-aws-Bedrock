@@ -1,13 +1,14 @@
 import asyncio
+import argparse
 from mcp import ClientSession
 from mcp import StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-from agent import CSVAgent
+from src.client import WeatherAgent
 
 
-async def main():
-    csv_agent = CSVAgent()
+async def main(text):
+    weather_agent = WeatherAgent()
 
     server_params = StdioServerParameters(
         command="uv",
@@ -19,14 +20,14 @@ async def main():
             await session.initialize()
             tools = await session.list_tools()
             for tool in tools.tools:
-                csv_agent.tools[tool.name] = {
+                weather_agent.tools[tool.name] = {
                     'name': tool.name,
                     'function': session.call_tool,
                     'description': tool.description,
                     'input_schema': {'json': tool.inputSchema},
                 }
 
-            response = await csv_agent.invoke([{'text': "뉴욕의 날씨 예보를 알려줘."}])
+            response = await weather_agent.invoke([{'text': text}])
 
             if response['stopReason'] == 'tool_use':
                 tool_response = []
@@ -35,7 +36,7 @@ async def main():
                         name = content_item['toolUse']['name']
                         tool_use_id = content_item['toolUse']['toolUseId']
                         tool_input = content_item['toolUse']['input']
-                        tool_func = csv_agent.tools[name]['function']
+                        tool_func = weather_agent.tools[name]['function']
 
                         result = await tool_func(name, tool_input)
                         tool_response.append(
@@ -47,7 +48,7 @@ async def main():
                                 }
                             }
                         )
-                response = await csv_agent.invoke(tool_response)
+                response = await weather_agent.invoke(tool_response)
                 for content_item in response['output']['message']['content']:
                     if 'text' in content_item:
                         print(content_item['text'])
@@ -58,4 +59,8 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser(description='Weather Agent CLI')
+    parser.add_argument('--text', type=str, required=True)
+    args = parser.parse_args()
+
+    asyncio.run(main(args.text))

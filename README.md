@@ -1,3 +1,6 @@
+# MCP with Bedrock
+
+## get weather sample
 
 1. install [`uv`](https://github.com/astral-sh/uv)
 
@@ -23,5 +26,5 @@ aws sso login --profile {alpha}
 4. run
 
 ```
-uv run python src/main.py
+uv run python main.py --text "뉴욕의 날씨 예보를 툴을 이용해서 알려줘."
 ```

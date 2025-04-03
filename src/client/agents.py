@@ -8,6 +8,16 @@ class CSVAgent:
         modelId="anthropic.claude-3-5-sonnet-20240620-v1:0",
         system_prompt="You are a helpful assistant that can answer questions and help with tools.",
     ):
+        pass
+
+
+class WeatherAgent:
+    def __init__(
+        self,
+        region="ap-northeast-2",
+        modelId="anthropic.claude-3-5-sonnet-20240620-v1:0",
+        system_prompt="You are a helpful assistant that can answer questions and help with tools.",
+    ):
         self.region = region
         self.modelId = modelId
         self.system_prompt = system_prompt
