@@ -18,6 +18,9 @@ class CSVAgent:
         # 대화 기록
         self.messages = []
 
+        # 도구 모음
+        self.tools = {}
+
     async def invoke(self, message):
 
         content = [{'text': message}]
@@ -29,6 +32,18 @@ class CSVAgent:
             }
         )
 
+        tool_specs = []
+        for name, tool in self.tools.items():
+            tool_specs.append(
+                {
+                    'toolSpec': {
+                        'name': name,
+                        'description': tool['description'],
+                        'inputSchema': tool['input_schema'],
+                    }
+                }
+            )
+
         response = self.client.converse(
             modelId=self.modelId,
             messages=self.messages,
@@ -37,16 +52,9 @@ class CSVAgent:
                 "maxTokens": 8192,
                 "temperature": 0.7,
             },
+            toolConfig={'tools': tool_specs},
         )
 
         self.messages.append(response["output"]["message"])
 
         return response
-
-
-class CSVTool:
-    def __init__(self):
-        pass
-
-    def get_tools(self):
-        pass

@@ -19,9 +19,14 @@ async def main():
             await session.initialize()
             tools = await session.list_tools()
             for tool in tools.tools:
-                print(tool.name)
+                csv_agent.tools[tool.name.replace('-', '_')] = {
+                    'function': session.call_tool,
+                    'description': tool.description,
+                    'input_schema': {'json': tool.inputSchema},
+                    'original_name': tool.name,
+                }
 
-            print(await csv_agent.invoke("안녕하세요"))
+            print(await csv_agent.invoke("아리조나 날씨를 알려줘."))
 
 
 if __name__ == "__main__":
