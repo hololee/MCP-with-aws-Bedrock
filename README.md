@@ -9,7 +9,19 @@ uv self update
 2. set python env
 
 ```
-uv python install 3.11.11
-uv venv --python 3.11.11
+pyenv install 3.11
+uv venv --python 3.11
 uv sync
+```
+
+3. set aws
+
+```
+aws sso login --profile {alpha}
+```
+
+4. run
+
+```
+uv run python src/main.py
 ```
