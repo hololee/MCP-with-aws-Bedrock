@@ -12,7 +12,7 @@ async def main(text):
 
     server_params = StdioServerParameters(
         command="uv",
-        args=["run", "src/mcp_server/app.py"],
+        args=["run", "src/mcp_server/weather/app.py"],
     )
 
     async with stdio_client(server_params) as (read, write):
